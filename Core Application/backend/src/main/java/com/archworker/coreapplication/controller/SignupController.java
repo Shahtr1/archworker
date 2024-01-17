@@ -23,13 +23,15 @@ public class SignupController {
     }
 
     @PostMapping
-    public ResponseEntity<String> signupCustomer(@RequestBody SignupDTO signupDTO) {
+    public ResponseEntity<String> signup(@RequestBody SignupDTO signupDTO) {
         boolean isUserCreated = authService.createUser(signupDTO);
 
         if (isUserCreated) {
-            return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully!");
+            String successMessage = "User created successfully!";
+            return ResponseEntity.status(HttpStatus.CREATED).body(successMessage);
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to create user");
+            String failedMessage = "Failed to create user";
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(failedMessage);
         }
     }
 }

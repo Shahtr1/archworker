@@ -1,16 +1,17 @@
 package com.archworker.coreapplication.controller;
 
 import com.archworker.coreapplication.dto.SignupDTO;
-import com.archworker.coreapplication.filter.JwtRequestFilter;
 import com.archworker.coreapplication.service.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -19,7 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-
+@ActiveProfiles("test")
 @WebMvcTest(controllers = SignupController.class, excludeAutoConfiguration = {SecurityAutoConfiguration.class})
 public class SignupControllerTests {
 
@@ -29,8 +30,6 @@ public class SignupControllerTests {
     @MockBean
     private AuthService authService;
 
-    @MockBean
-    private JwtRequestFilter jwtRequestFilter;
 
     @Test
     @DisplayName("User can be created")
@@ -43,7 +42,7 @@ public class SignupControllerTests {
         signupDTO.setName("Test");
         signupDTO.setPassword("test");
 
-        when(authService.createUser(signupDTO)).thenReturn(true);
+        when(authService.createUser(Mockito.any())).thenReturn(true);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/signup")
                 .contentType(MediaType.APPLICATION_JSON)

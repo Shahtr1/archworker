@@ -27,7 +27,7 @@ public class SignupController {
         boolean isUserCreated = authService.createUser(signupDTO);
 
         if (isUserCreated) {
-            String successMessage = "User created successfully!";
+            String successMessage = "User created successfullyaa!";
             return ResponseEntity.status(HttpStatus.CREATED).body(successMessage);
         } else {
             String failedMessage = "Failed to create user";

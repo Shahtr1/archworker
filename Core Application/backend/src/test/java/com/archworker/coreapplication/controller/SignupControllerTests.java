@@ -30,12 +30,12 @@ public class SignupControllerTests {
     @MockBean
     private AuthService authService;
 
-
     @Test
     @DisplayName("User can be created")
     void testSignUp_whenValidUserDetailsProvided_returnsConfirmationString() throws Exception {
 //        Arrange
         String successMessage = "User created successfully!";
+        String failedMessage = "Failed to create user";
 
         SignupDTO signupDTO = new SignupDTO();
         signupDTO.setEmail("test@test.com");
@@ -54,7 +54,7 @@ public class SignupControllerTests {
         String responseBodyAsString = mvcResult.getResponse().getContentAsString();
 
 //        Assert
-        assertEquals(successMessage,responseBodyAsString,"user not saved");
+        assertEquals(successMessage,responseBodyAsString,failedMessage);
 
     }
 

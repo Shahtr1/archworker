@@ -2,6 +2,7 @@ package com.archworker.coreapplication.controller;
 
 import com.archworker.coreapplication.dto.SignupDTO;
 import com.archworker.coreapplication.service.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class SignupController {
     }
 
     @PostMapping
-    public ResponseEntity<String> signup(@RequestBody SignupDTO signupDTO) {
+    public ResponseEntity<String> signup(@Valid @RequestBody SignupDTO signupDTO) {
         boolean isUserCreated = authService.createUser(signupDTO);
 
         if (isUserCreated) {

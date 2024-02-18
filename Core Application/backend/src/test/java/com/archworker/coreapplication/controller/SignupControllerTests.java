@@ -2,6 +2,7 @@ package com.archworker.coreapplication.controller;
 
 import com.archworker.coreapplication.dto.SignupDTO;
 import com.archworker.coreapplication.service.AuthService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +36,6 @@ public class SignupControllerTests {
     void testSignUp_whenValidUserDetailsProvided_returnsConfirmationString() throws Exception {
 //        Arrange
         String successMessage = "User created successfully!";
-        String failedMessage = "Failed to create user";
 
         SignupDTO signupDTO = new SignupDTO();
         signupDTO.setEmail("test@test.com");
@@ -54,8 +54,34 @@ public class SignupControllerTests {
         String responseBodyAsString = mvcResult.getResponse().getContentAsString();
 
 //        Assert
-        assertEquals(successMessage,responseBodyAsString,failedMessage);
+        assertEquals(successMessage,responseBodyAsString);
 
+    }
+
+    @Test
+    @DisplayName("User cannot be created with invalid details")
+    void testSignUp_whenInvalidUserDetailsProvided_returnsFailureString() throws Exception {
+        // Arrange
+        String failedMessage = "Failed to create user";
+
+        SignupDTO signupDTO = new SignupDTO();
+        signupDTO.setEmail("invalid@invalid.com");
+        signupDTO.setName("Invalid");
+        signupDTO.setPassword("invalid");
+
+        when(authService.createUser(Mockito.any())).thenReturn(false);
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/signup")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.ALL)
+                .content(new ObjectMapper().writeValueAsString(signupDTO));
+
+        //        Act
+        MvcResult mvcResult = mockMvc.perform(requestBuilder).andReturn();
+        String responseBodyAsString = mvcResult.getResponse().getContentAsString();
+
+        //        Assert
+        assertEquals(failedMessage,responseBodyAsString);
     }
 
 }

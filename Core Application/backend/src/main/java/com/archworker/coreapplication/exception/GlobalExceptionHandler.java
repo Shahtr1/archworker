@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
                 .map(violation -> violation.getPropertyPath() + ": " + violation.getMessage())
                 .collect(Collectors.toList());
 
-        ErrorDTO errorMessage = new ErrorDTO(
+        ErrorDTO errorDTO = new ErrorDTO(
                 LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 "Validation Error",
@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
                 request.getDescription(false)
         );
 
-        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
     }
 
 
@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
                 .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
                 .collect(Collectors.toList());
 
-        ErrorDTO errorMessage = new ErrorDTO(
+        ErrorDTO errorDTO = new ErrorDTO(
                 LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 "Validation Error",
@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
                 request.getDescription(false)
         );
 
-        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
     }
 
 }

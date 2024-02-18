@@ -1,5 +1,6 @@
 package com.archworker.coreapplication.controller;
 
+import com.archworker.coreapplication.dto.ErrorDTO;
 import com.archworker.coreapplication.dto.SignupDTO;
 import com.archworker.coreapplication.service.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,6 +31,9 @@ public class SignupControllerTests {
     @MockBean
     private AuthService authService;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Test
     @DisplayName("User can be created")
     void testSignUp_whenValidUserDetailsProvided_returnsConfirmationString() throws Exception {
@@ -39,7 +43,7 @@ public class SignupControllerTests {
         SignupDTO signupDTO = new SignupDTO();
         signupDTO.setEmail("test@test.com");
         signupDTO.setName("Test");
-        signupDTO.setPassword("test");
+        signupDTO.setPassword("shahrukh");
 
         when(authService.createUser(Mockito.any())).thenReturn(true);
 
@@ -66,21 +70,22 @@ public class SignupControllerTests {
         SignupDTO signupDTO = new SignupDTO();
         signupDTO.setEmail("invalid@invalid.com");
         signupDTO.setName("Invalid");
-        signupDTO.setPassword("invalid");
+        signupDTO.setPassword("invalidPassword");
 
         when(authService.createUser(Mockito.any())).thenReturn(false);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/signup")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.ALL)
-                .content(new ObjectMapper().writeValueAsString(signupDTO));
+                .content(objectMapper.writeValueAsString(signupDTO));
 
         //        Act
         MvcResult mvcResult = mockMvc.perform(requestBuilder).andReturn();
         String responseBodyAsString = mvcResult.getResponse().getContentAsString();
+        ErrorDTO errorDTO = objectMapper.readValue(responseBodyAsString, ErrorDTO.class);
 
         //        Assert
-        assertEquals(failedMessage,responseBodyAsString);
+        assertEquals(failedMessage,errorDTO.getError());
     }
 
 }

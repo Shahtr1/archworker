@@ -2,7 +2,6 @@ package com.archworker.coreapplication.controller;
 
 import com.archworker.coreapplication.dto.SignupDTO;
 import com.archworker.coreapplication.service.AuthService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

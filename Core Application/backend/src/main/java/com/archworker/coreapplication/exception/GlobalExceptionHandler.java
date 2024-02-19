@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+    private final String validationErrorName = "Validation Error";
+
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorDTO> handleConstraintViolationException(ConstraintViolationException ex, WebRequest request) {
         List<String> errors = ex.getConstraintViolations().stream()
@@ -25,7 +27,7 @@ public class GlobalExceptionHandler {
         ErrorDTO errorDTO = new ErrorDTO(
                 LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
-                "Validation Error",
+                validationErrorName,
                 errors,
                 request.getDescription(false)
         );
@@ -43,7 +45,7 @@ public class GlobalExceptionHandler {
         ErrorDTO errorDTO = new ErrorDTO(
                 LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
-                "Validation Error",
+                validationErrorName,
                 errors,
                 request.getDescription(false)
         );

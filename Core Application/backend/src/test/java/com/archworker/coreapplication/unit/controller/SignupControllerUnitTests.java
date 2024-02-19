@@ -1,5 +1,6 @@
-package com.archworker.coreapplication.controller;
+package com.archworker.coreapplication.unit.controller;
 
+import com.archworker.coreapplication.controller.SignupController;
 import com.archworker.coreapplication.dto.ErrorDTO;
 import com.archworker.coreapplication.dto.SignupDTO;
 import com.archworker.coreapplication.service.AuthService;
@@ -25,7 +26,7 @@ import static org.mockito.Mockito.when;
 
 @ActiveProfiles("test")
 @WebMvcTest(controllers = SignupController.class, excludeAutoConfiguration = {SecurityAutoConfiguration.class})
-public class SignupControllerTests {
+public class SignupControllerUnitTests {
 
     @Autowired
     private MockMvc mockMvc;
@@ -260,5 +261,6 @@ public class SignupControllerTests {
         //        Assert
         assertEquals(true,messages.contains("password: " + failedMessage));
     }
+
 
 }

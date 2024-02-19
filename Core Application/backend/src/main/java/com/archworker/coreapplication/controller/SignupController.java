@@ -42,7 +42,7 @@ public class SignupController {
                     LocalDateTime.now(),
                     HttpStatus.BAD_REQUEST.value(),
                     failedMessage,
-                    Collections.singletonList("User creation failed due to some internal error."),
+                    Collections.singletonList("email: User email already exists."),
                     request.getRequestURI());
 
             return ResponseEntity.badRequest().body(errorDTO);

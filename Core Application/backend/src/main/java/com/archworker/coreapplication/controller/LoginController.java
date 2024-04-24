@@ -3,7 +3,7 @@ package com.archworker.coreapplication.controller;
 import com.archworker.coreapplication.dto.JwtDTO;
 import com.archworker.coreapplication.dto.LoginDTO;
 import com.archworker.coreapplication.service.jwt.UserServiceImpl;
-import com.archworker.coreapplication.util.JwtUtil;
+import com.archworker.coreapplication.util.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,23 +34,23 @@ public class LoginController {
     }
 
     @PostMapping(produces = "application/json")
-    public ResponseEntity<JwtDTO> login(@RequestBody LoginDTO loginDTO){
+    public ResponseEntity<JwtDTO> login(@RequestBody LoginDTO loginDTO) {
         System.out.println(loginDTO);
-        try{
+        try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            loginDTO.getEmail(),loginDTO.getPassword()
+                            loginDTO.getEmail(), loginDTO.getPassword()
                     )
             );
-        }catch (AuthenticationException e){
+        } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         UserDetails userDetails;
 
-        try{
+        try {
             userDetails = userService.loadUserByUsername(loginDTO.getEmail());
-        }catch (UsernameNotFoundException e){
+        } catch (UsernameNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 

@@ -66,15 +66,15 @@ public class SignupControllerUnitTests {
     }
 
     @Test
-    @DisplayName("User cannot be created with invalid details")
+    @DisplayName("User cannot be created when service has error")
     void testSignUp_whenInvalidUserDetailsProvided_returnsFailureString() throws Exception {
         // Arrange
         String failedMessage = "Failed to create user";
 
         SignupDTO signupDTO = new SignupDTO();
-        signupDTO.setEmail("invalid@invalid.com");
-        signupDTO.setName("Invalid");
-        signupDTO.setPassword("invalidPassword");
+        signupDTO.setEmail("test@test.com");
+        signupDTO.setName("Test");
+        signupDTO.setPassword("shahrukh");
 
         when(authService.createUser(Mockito.any())).thenReturn(false);
 

@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ActiveProfiles("test")
@@ -60,7 +61,7 @@ public class SignupControllerUnitTests {
         String responseBodyAsString = mvcResult.getResponse().getContentAsString();
 
 //        Assert
-        assertEquals(successMessage,responseBodyAsString);
+        assertEquals(successMessage, responseBodyAsString);
 
     }
 
@@ -88,12 +89,12 @@ public class SignupControllerUnitTests {
         ErrorDTO errorDTO = objectMapper.readValue(responseBodyAsString, ErrorDTO.class);
 
         //        Assert
-        assertEquals(failedMessage,errorDTO.getError());
+        assertEquals(failedMessage, errorDTO.getError());
     }
 
     @Test
     @DisplayName("User cannot be created with invalid email format")
-    void testSignUp_whenEmailIsInvalid_returnsInvalidEmail() throws Exception{
+    void testSignUp_whenEmailIsInvalid_returnsInvalidEmail() throws Exception {
         // Arrange
         String failedMessage = "Email must be a valid email address";
 
@@ -113,16 +114,16 @@ public class SignupControllerUnitTests {
         MvcResult mvcResult = mockMvc.perform(requestBuilder).andReturn();
         String responseBodyAsString = mvcResult.getResponse().getContentAsString();
         ErrorDTO errorDTO = objectMapper.readValue(responseBodyAsString, ErrorDTO.class);
-        List<String > messages =  errorDTO.getMessages();
+        List<String> messages = errorDTO.getMessages();
 
 
         //        Assert
-        assertEquals(true,messages.contains("email: " + failedMessage));
+        assertTrue(messages.contains("email: " + failedMessage));
     }
 
     @Test
     @DisplayName("User cannot be created with name having less than 2 characters")
-    void testSignUp_whenNameIsLessThan2Characters_returnsInvalidName() throws Exception{
+    void testSignUp_whenNameIsLessThan2Characters_returnsInvalidName() throws Exception {
         // Arrange
         String failedMessage = "Name must be at least 2 characters long";
 
@@ -142,16 +143,16 @@ public class SignupControllerUnitTests {
         MvcResult mvcResult = mockMvc.perform(requestBuilder).andReturn();
         String responseBodyAsString = mvcResult.getResponse().getContentAsString();
         ErrorDTO errorDTO = objectMapper.readValue(responseBodyAsString, ErrorDTO.class);
-        List<String > messages =  errorDTO.getMessages();
+        List<String> messages = errorDTO.getMessages();
 
 
         //        Assert
-        assertEquals(true,messages.contains("name: " + failedMessage));
+        assertTrue(messages.contains("name: " + failedMessage));
     }
 
     @Test
     @DisplayName("User cannot be created with password having less than 8 characters")
-    void testSignUp_whenPasswordIsLessThan8Characters_returnsInvalidPassword() throws Exception{
+    void testSignUp_whenPasswordIsLessThan8Characters_returnsInvalidPassword() throws Exception {
         // Arrange
         String failedMessage = "Password must be at least 8 characters long";
 
@@ -171,16 +172,16 @@ public class SignupControllerUnitTests {
         MvcResult mvcResult = mockMvc.perform(requestBuilder).andReturn();
         String responseBodyAsString = mvcResult.getResponse().getContentAsString();
         ErrorDTO errorDTO = objectMapper.readValue(responseBodyAsString, ErrorDTO.class);
-        List<String > messages =  errorDTO.getMessages();
+        List<String> messages = errorDTO.getMessages();
 
 
         //        Assert
-        assertEquals(true,messages.contains("password: " + failedMessage));
+        assertTrue(messages.contains("password: " + failedMessage));
     }
 
     @Test
     @DisplayName("User cannot be created if email field is missing")
-    void testSignUp_whenEmailFieldMissing_returnsRequiredError() throws Exception{
+    void testSignUp_whenEmailFieldMissing_returnsRequiredError() throws Exception {
         // Arrange
         String failedMessage = "Email is required";
 
@@ -199,16 +200,16 @@ public class SignupControllerUnitTests {
         MvcResult mvcResult = mockMvc.perform(requestBuilder).andReturn();
         String responseBodyAsString = mvcResult.getResponse().getContentAsString();
         ErrorDTO errorDTO = objectMapper.readValue(responseBodyAsString, ErrorDTO.class);
-        List<String > messages =  errorDTO.getMessages();
+        List<String> messages = errorDTO.getMessages();
 
 
         //        Assert
-        assertEquals(true,messages.contains("email: " + failedMessage));
+        assertTrue(messages.contains("email: " + failedMessage));
     }
 
     @Test
     @DisplayName("User cannot be created if name field is missing")
-    void testSignUp_whenNameFieldMissing_returnsRequiredError() throws Exception{
+    void testSignUp_whenNameFieldMissing_returnsRequiredError() throws Exception {
         // Arrange
         String failedMessage = "Name is required";
 
@@ -227,16 +228,16 @@ public class SignupControllerUnitTests {
         MvcResult mvcResult = mockMvc.perform(requestBuilder).andReturn();
         String responseBodyAsString = mvcResult.getResponse().getContentAsString();
         ErrorDTO errorDTO = objectMapper.readValue(responseBodyAsString, ErrorDTO.class);
-        List<String > messages =  errorDTO.getMessages();
+        List<String> messages = errorDTO.getMessages();
 
 
         //        Assert
-        assertEquals(true,messages.contains("name: " + failedMessage));
+        assertTrue(messages.contains("name: " + failedMessage));
     }
 
     @Test
     @DisplayName("User cannot be created if password field is missing")
-    void testSignUp_whenPasswordFieldMissing_returnsRequiredError() throws Exception{
+    void testSignUp_whenPasswordFieldMissing_returnsRequiredError() throws Exception {
         // Arrange
         String failedMessage = "Password is required";
 
@@ -255,11 +256,11 @@ public class SignupControllerUnitTests {
         MvcResult mvcResult = mockMvc.perform(requestBuilder).andReturn();
         String responseBodyAsString = mvcResult.getResponse().getContentAsString();
         ErrorDTO errorDTO = objectMapper.readValue(responseBodyAsString, ErrorDTO.class);
-        List<String > messages =  errorDTO.getMessages();
+        List<String> messages = errorDTO.getMessages();
 
 
         //        Assert
-        assertEquals(true,messages.contains("password: " + failedMessage));
+        assertTrue(messages.contains("password: " + failedMessage));
     }
 
 

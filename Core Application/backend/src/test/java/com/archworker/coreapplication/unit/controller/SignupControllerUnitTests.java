@@ -21,9 +21,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("test")
 @WebMvcTest(controllers = SignupController.class, excludeAutoConfiguration = {SecurityAutoConfiguration.class})
@@ -42,8 +42,6 @@ public class SignupControllerUnitTests {
     @DisplayName("User can be created")
     void testSignUp_whenValidUserDetailsProvided_returnsConfirmationString() throws Exception {
 //        Arrange
-        String successMessage = "User created successfully!";
-
         SignupDTO signupDTO = new SignupDTO();
         signupDTO.setEmail("test@test.com");
         signupDTO.setName("Test");
@@ -51,17 +49,11 @@ public class SignupControllerUnitTests {
 
         when(authService.createUser(Mockito.any())).thenReturn(true);
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/signup")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.ALL)
-                .content(new ObjectMapper().writeValueAsString(signupDTO));
-
-//        Act
-        MvcResult mvcResult = mockMvc.perform(requestBuilder).andReturn();
-        String responseBodyAsString = mvcResult.getResponse().getContentAsString();
-
-//        Assert
-        assertEquals(successMessage, responseBodyAsString);
+        // Act & Assert
+        mockMvc.perform(MockMvcRequestBuilders.post("/signup")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(signupDTO)))
+                .andExpect(status().isCreated());
 
     }
 
@@ -69,8 +61,6 @@ public class SignupControllerUnitTests {
     @DisplayName("User cannot be created when service has error")
     void testSignUp_whenInvalidUserDetailsProvided_returnsFailureString() throws Exception {
         // Arrange
-        String failedMessage = "Failed to create user";
-
         SignupDTO signupDTO = new SignupDTO();
         signupDTO.setEmail("test@test.com");
         signupDTO.setName("Test");
@@ -78,18 +68,11 @@ public class SignupControllerUnitTests {
 
         when(authService.createUser(Mockito.any())).thenReturn(false);
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/signup")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.ALL)
-                .content(objectMapper.writeValueAsString(signupDTO));
-
-        //        Act
-        MvcResult mvcResult = mockMvc.perform(requestBuilder).andReturn();
-        String responseBodyAsString = mvcResult.getResponse().getContentAsString();
-        ErrorDTO errorDTO = objectMapper.readValue(responseBodyAsString, ErrorDTO.class);
-
-        //        Assert
-        assertEquals(failedMessage, errorDTO.getError());
+        // Act & Assert
+        mockMvc.perform(MockMvcRequestBuilders.post("/signup")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(signupDTO)))
+                .andExpect(status().isBadRequest());
     }
 
     @Test

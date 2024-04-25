@@ -3,6 +3,7 @@ package com.archworker.coreapplication.controller;
 import com.archworker.coreapplication.dto.ErrorDTO;
 import com.archworker.coreapplication.dto.SignupDTO;
 import com.archworker.coreapplication.service.AuthService;
+import com.archworker.coreapplication.util.common.CommonMethods;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 
 @RestController
 @RequestMapping("/signup")
@@ -42,7 +42,7 @@ public class SignupController {
                     LocalDateTime.now(),
                     HttpStatus.BAD_REQUEST.value(),
                     failedMessage,
-                    Collections.singletonList("email: User email already exists."),
+                    CommonMethods.getSingletonListFromKeyAndValue("email", "User email already exists."),
                     request.getRequestURI());
 
             return ResponseEntity.badRequest().body(errorDTO);

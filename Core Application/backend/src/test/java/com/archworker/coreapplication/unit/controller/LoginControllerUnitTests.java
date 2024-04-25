@@ -1,6 +1,7 @@
 package com.archworker.coreapplication.unit.controller;
 
 import com.archworker.coreapplication.controller.LoginController;
+import com.archworker.coreapplication.dto.ErrorDTO;
 import com.archworker.coreapplication.dto.LoginDTO;
 import com.archworker.coreapplication.service.jwt.UserServiceImpl;
 import com.archworker.coreapplication.util.security.JwtUtil;
@@ -19,11 +20,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -122,6 +126,83 @@ public class LoginControllerUnitTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(loginDTO)))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("Login fails with invalid email format")
+    void testLogin_whenEmailIsInvalid_returnsInvalidEmail() throws Exception {
+        // Arrange
+        String failedMessage = "Email must be a valid email address";
+
+        LoginDTO loginDTO = new LoginDTO();
+        loginDTO.setEmail("invalid.com");
+        loginDTO.setPassword("validPassword");
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.ALL)
+                .content(objectMapper.writeValueAsString(loginDTO));
+
+        //        Act
+        MvcResult mvcResult = mockMvc.perform(requestBuilder).andReturn();
+        String responseBodyAsString = mvcResult.getResponse().getContentAsString();
+        ErrorDTO errorDTO = objectMapper.readValue(responseBodyAsString, ErrorDTO.class);
+        List<String> messages = errorDTO.getMessages();
+
+
+        //        Assert
+        assertTrue(messages.contains("email: " + failedMessage));
+    }
+
+    @Test
+    @DisplayName("Login fails if email field is missing")
+    void testLogin_whenEmailFieldMissing_returnsRequiredError() throws Exception {
+        // Arrange
+        String failedMessage = "Email is required";
+
+        LoginDTO loginDTO = new LoginDTO();
+        loginDTO.setPassword("validPassword");
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.ALL)
+                .content(objectMapper.writeValueAsString(loginDTO));
+
+        //        Act
+        MvcResult mvcResult = mockMvc.perform(requestBuilder).andReturn();
+        String responseBodyAsString = mvcResult.getResponse().getContentAsString();
+        ErrorDTO errorDTO = objectMapper.readValue(responseBodyAsString, ErrorDTO.class);
+        List<String> messages = errorDTO.getMessages();
+
+
+        //        Assert
+        assertTrue(messages.contains("email: " + failedMessage));
+    }
+
+    @Test
+    @DisplayName("Login fails if password field is missing")
+    void testLogin_whenPasswordFieldMissing_returnsRequiredError() throws Exception {
+        // Arrange
+        String failedMessage = "Password is required";
+
+        LoginDTO loginDTO = new LoginDTO();
+        loginDTO.setEmail("valid@valid.com");
+
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.ALL)
+                .content(objectMapper.writeValueAsString(loginDTO));
+
+        //        Act
+        MvcResult mvcResult = mockMvc.perform(requestBuilder).andReturn();
+        String responseBodyAsString = mvcResult.getResponse().getContentAsString();
+        ErrorDTO errorDTO = objectMapper.readValue(responseBodyAsString, ErrorDTO.class);
+        List<String> messages = errorDTO.getMessages();
+
+
+        //        Assert
+        assertTrue(messages.contains("password: " + failedMessage));
     }
 
 

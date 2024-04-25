@@ -5,6 +5,9 @@ import com.archworker.coreapplication.dto.ErrorDTO;
 import com.archworker.coreapplication.dto.SignupDTO;
 import com.archworker.coreapplication.service.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -20,14 +23,25 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("test")
 @WebMvcTest(controllers = SignupController.class, excludeAutoConfiguration = {SecurityAutoConfiguration.class})
 public class SignupControllerUnitTests {
+
+    @MockBean
+    private MeterRegistry meterRegistry;
+
+    @MockBean
+    private Timer responseTimer;
+
+    @MockBean
+    private Counter signUpFailedCounter;
 
     @Autowired
     private MockMvc mockMvc;
@@ -37,6 +51,7 @@ public class SignupControllerUnitTests {
 
     @Autowired
     private ObjectMapper objectMapper;
+
 
     @Test
     @DisplayName("User can be created")
@@ -60,6 +75,7 @@ public class SignupControllerUnitTests {
     @Test
     @DisplayName("User cannot be created when service has error")
     void testSignUp_whenInvalidUserDetailsProvided_returnsFailureString() throws Exception {
+
         // Arrange
         SignupDTO signupDTO = new SignupDTO();
         signupDTO.setEmail("test@test.com");
@@ -67,6 +83,11 @@ public class SignupControllerUnitTests {
         signupDTO.setPassword("shahrukh");
 
         when(authService.createUser(Mockito.any())).thenReturn(false);
+
+        when(meterRegistry.timer(anyString())).thenReturn(this.responseTimer);
+        when(meterRegistry.counter(anyString())).thenReturn(this.signUpFailedCounter);
+        Mockito.doNothing().when(this.responseTimer)
+                .record(Mockito.anyLong(), Mockito.any(TimeUnit.class));
 
         // Act & Assert
         mockMvc.perform(MockMvcRequestBuilders.post("/signup")

@@ -6,6 +6,7 @@ import com.archworker.coreapplication.dto.LoginDTO;
 import com.archworker.coreapplication.service.jwt.UserServiceImpl;
 import com.archworker.coreapplication.util.common.CommonMethods;
 import com.archworker.coreapplication.util.security.JwtUtil;
+import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,7 @@ public class LoginController {
         this.jwtUtil = jwtUtil;
     }
 
+    @Timed
     @PostMapping(produces = "application/json")
     public ResponseEntity<?> login(@Valid @RequestBody LoginDTO loginDTO, HttpServletRequest request) {
         try {

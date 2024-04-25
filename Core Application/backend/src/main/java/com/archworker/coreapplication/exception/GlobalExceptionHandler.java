@@ -2,6 +2,7 @@ package com.archworker.coreapplication.exception;
 
 
 import com.archworker.coreapplication.dto.ErrorDTO;
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -21,7 +23,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorDTO> handleConstraintViolationException(ConstraintViolationException ex, WebRequest request) {
         List<String> errors = ex.getConstraintViolations().stream()
-                .map(violation -> violation.getPropertyPath() + ": " + violation.getMessage())
+                .map(getConstraintViolationStringFunction())
                 .collect(Collectors.toList());
 
         ErrorDTO errorDTO = new ErrorDTO(
@@ -33,6 +35,10 @@ public class GlobalExceptionHandler {
         );
 
         return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
+    }
+
+    private static Function<ConstraintViolation<?>, String> getConstraintViolationStringFunction() {
+        return violation -> violation.getPropertyPath() + ": " + violation.getMessage();
     }
 
 

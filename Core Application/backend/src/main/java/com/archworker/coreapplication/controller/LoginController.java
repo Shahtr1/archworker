@@ -1,9 +1,13 @@
 package com.archworker.coreapplication.controller;
 
+import com.archworker.coreapplication.dto.ErrorDTO;
 import com.archworker.coreapplication.dto.JwtDTO;
 import com.archworker.coreapplication.dto.LoginDTO;
 import com.archworker.coreapplication.service.jwt.UserServiceImpl;
+import com.archworker.coreapplication.util.common.CommonMethods;
 import com.archworker.coreapplication.util.security.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +20,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("login")
@@ -34,8 +40,7 @@ public class LoginController {
     }
 
     @PostMapping(produces = "application/json")
-    public ResponseEntity<JwtDTO> login(@RequestBody LoginDTO loginDTO) {
-        System.out.println(loginDTO);
+    public ResponseEntity<?> login(@Valid @RequestBody LoginDTO loginDTO, HttpServletRequest request) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -43,7 +48,17 @@ public class LoginController {
                     )
             );
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            String failedMessage = "Authentication failed. Invalid username or password.";
+
+            ErrorDTO errorDTO = new ErrorDTO(
+                    LocalDateTime.now(),
+                    HttpStatus.UNAUTHORIZED.value(),
+                    failedMessage,
+                    CommonMethods.getSingletonListFromKeyAndValue("auth", "Invalid credentials provided."),
+                    request.getRequestURI()
+            );
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorDTO);
         }
 
         UserDetails userDetails;
@@ -51,7 +66,17 @@ public class LoginController {
         try {
             userDetails = userService.loadUserByUsername(loginDTO.getEmail());
         } catch (UsernameNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            String failedMessage = "Authentication failed. User not found.";
+
+            ErrorDTO errorDTO = new ErrorDTO(
+                    LocalDateTime.now(),
+                    HttpStatus.NOT_FOUND.value(),
+                    failedMessage,
+                    CommonMethods.getSingletonListFromKeyAndValue("auth", "User not found for provided email."),
+                    request.getRequestURI()
+            );
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDTO);
         }
 
         String jwt = jwtUtil.generateToken(userDetails.getUsername());

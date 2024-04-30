@@ -33,7 +33,7 @@ public class AuthServiceImplIntTests {
     void testCreateUser_whenValidUserDetailsProvided_returnsTrue() {
         // Arrange
         SignupDTO signupDTO = new SignupDTO();
-        signupDTO.setEmail("test@test.com");
+        signupDTO.setEmail("test2@test.com");
         signupDTO.setPassword("securePassword");
         signupDTO.setName("test");
 
@@ -53,7 +53,7 @@ public class AuthServiceImplIntTests {
     public void testCreateUser_ExistingEmail_ReturnsFalse() {
         // Arrange
         SignupDTO signupDTO = new SignupDTO();
-        signupDTO.setEmail("test@test.com");
+        signupDTO.setEmail("test2@test.com");
         signupDTO.setPassword("securePassword");
         signupDTO.setName("shahrukh");
 
@@ -63,6 +63,5 @@ public class AuthServiceImplIntTests {
         // Assert
         assertFalse(result, "The result should be false when email already exists");
         assertTrue(userRepository.existsByEmail(signupDTO.getEmail()));
-        User user = userRepository.findByEmail(signupDTO.getEmail()).orElseThrow();
     }
 }

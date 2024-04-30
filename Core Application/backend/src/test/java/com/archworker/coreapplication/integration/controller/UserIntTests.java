@@ -31,7 +31,6 @@ public class UserIntTests {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
-
     @Autowired
     private ObjectMapper objectMapper;
 

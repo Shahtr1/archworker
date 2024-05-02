@@ -42,7 +42,7 @@ public class GlobalExceptionHandlerUnitTests {
         ConstraintViolationException exception = new ConstraintViolationException(violations);
 
 
-        // This line creates a mock of the javax.validation.Path class, which represents the property path in a constraint violation
+        // This line creates a mock of the jakarta.validation.Path class, which represents the property path in a constraint violation
         // (i.e., where in your data model the violation occurred).
         Path mockPath = mock(Path.class);
 

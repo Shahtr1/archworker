@@ -1,6 +1,8 @@
 package com.archworker.coreapplication.unit.service;
 
+import com.archworker.coreapplication.entity.Role;
 import com.archworker.coreapplication.entity.User;
+import com.archworker.coreapplication.enums.RoleEnum;
 import com.archworker.coreapplication.repository.UserRepository;
 import com.archworker.coreapplication.service.jwt.UserServiceImpl;
 import org.junit.jupiter.api.DisplayName;
@@ -12,7 +14,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -36,6 +40,13 @@ public class UserServiceImplUnitTests {
         dummyUser.setName("dummyName");
         dummyUser.setPassword("dummyPassword");
 
+        Role role = new Role();
+        role.setRole(RoleEnum.USER);
+
+        Set<Role> roles = new HashSet<>();
+        roles.add(role);
+        dummyUser.setRoles(roles);
+
         when(userRepository.findByEmail("dummy@email.com")).thenReturn(Optional.of(dummyUser));
 
         // Act
@@ -44,7 +55,8 @@ public class UserServiceImplUnitTests {
         // Assert
         assertEquals(userDetails.getUsername(), dummyUser.getEmail());
         assertEquals(userDetails.getPassword(), dummyUser.getPassword());
-        assertEquals(0, userDetails.getAuthorities().size(), "No authorities should be granted");
+        assertEquals(1, userDetails.getAuthorities().size(), "One authority should be granted");
+        assertEquals("ROLE_USER", userDetails.getAuthorities().iterator().next().getAuthority());
 
     }
 

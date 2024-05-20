@@ -1,6 +1,8 @@
 package com.archworker.coreapplication.integration.filter;
 
 import com.archworker.coreapplication.dto.SignupDTO;
+import com.archworker.coreapplication.entity.Role;
+import com.archworker.coreapplication.enums.RoleEnum;
 import com.archworker.coreapplication.filter.JwtRequestFilter;
 import com.archworker.coreapplication.repository.UserRepository;
 import com.archworker.coreapplication.service.AuthService;
@@ -18,12 +20,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.TestPropertySource;
 
+import javax.management.relation.RoleNotFoundException;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,10 +52,19 @@ public class JwtRequestFilterIntTests {
     @Autowired
     private UserRepository userRepository;
 
+    List<SimpleGrantedAuthority> authorities;
+
     @BeforeEach
     void setUp() {
         SecurityContextHolder.clearContext();
         userRepository.deleteAll();
+
+        Role userRole = new Role();
+        userRole.setRole(RoleEnum.USER);
+
+        authorities = Stream.of(userRole)
+                .map(role -> new SimpleGrantedAuthority(role.getRole().getRoleName()))
+                .toList();
     }
 
     @AfterEach
@@ -97,7 +113,9 @@ public class JwtRequestFilterIntTests {
     @DisplayName("Test doFilterInternal with valid authorization header but no username extracted")
     void testDoFilterInternal_ValidAuthorizationHeader_NoUsernameExtracted() throws ServletException, IOException {
         // Arrange
-        String validToken = jwtUtil.generateToken("integrationTestUser");
+        String username = "integrationTestUser1";
+        UserDetails userDetails = new User(username, "password", authorities);
+        String validToken = jwtUtil.generateToken(userDetails);
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         String authHeader = SecurityConstants.TOKEN_PREFIX + validToken;
@@ -116,7 +134,7 @@ public class JwtRequestFilterIntTests {
 
     @Test
     @DisplayName("Test doFilterInternal with valid authorization header, username extracted, no authentication in SecurityContext")
-    void testDoFilterInternal_ValidAuthorizationHeader_UsernameExtracted_NoAuthentication() throws ServletException, IOException {
+    void testDoFilterInternal_ValidAuthorizationHeader_UsernameExtracted_NoAuthentication() throws ServletException, IOException, RoleNotFoundException {
         // Arrange
         String username = "jwtRequestTestUser";
         String email = "jwtRequestTestUser@test.com";
@@ -125,7 +143,11 @@ public class JwtRequestFilterIntTests {
         signupDTO.setPassword("securePassword");
         signupDTO.setName(username);
 
-        String validToken = jwtUtil.generateToken(email);
+        authService.createUser(signupDTO);
+
+
+        UserDetails userDetails = new User(email, "password", authorities);
+        String validToken = jwtUtil.generateToken(userDetails);
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         String authHeader = SecurityConstants.TOKEN_PREFIX + validToken;
@@ -137,7 +159,6 @@ public class JwtRequestFilterIntTests {
 
 
         // Act
-        authService.createUser(signupDTO);
         jwtRequestFilter.doFilterInternal(request, response, filterChain);
 
         // Assert
@@ -150,10 +171,10 @@ public class JwtRequestFilterIntTests {
 
     @Test
     @DisplayName("Test doFilterInternal with valid authorization header and existing authentication in SecurityContext")
-    void testDoFilterInternal_ValidAuthorizationHeader_AuthenticationAlreadyPresent() throws ServletException, IOException {
+    void testDoFilterInternal_ValidAuthorizationHeader_AuthenticationAlreadyPresent() throws ServletException, IOException, RoleNotFoundException {
         // Arrange
-        String username = "jwtRequestTestUser";
-        String email = "jwtRequestTestUser@test.com";
+        String username = "jwtRequestTestUser1";
+        String email = "jwtRequestTestUser1@test.com";
         SignupDTO signupDTO = new SignupDTO();
         signupDTO.setEmail(email);
         signupDTO.setPassword("securePassword");
@@ -162,7 +183,8 @@ public class JwtRequestFilterIntTests {
         // Create user
         authService.createUser(signupDTO);
 
-        String validToken = jwtUtil.generateToken(email);
+        UserDetails userDetailsCreation = new User(email, "password", authorities);
+        String validToken = jwtUtil.generateToken(userDetailsCreation);
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         String authHeader = SecurityConstants.TOKEN_PREFIX + validToken;

@@ -10,6 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 
+import javax.management.relation.RoleNotFoundException;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -30,7 +32,7 @@ public class AuthServiceImplIntTests {
     @Test
     @DisplayName("User creation successful and returns TRUE")
     @Order(1)
-    void testCreateUser_whenValidUserDetailsProvided_returnsTrue() {
+    void testCreateUser_whenValidUserDetailsProvided_returnsTrue() throws RoleNotFoundException {
         // Arrange
         SignupDTO signupDTO = new SignupDTO();
         signupDTO.setEmail("test2@test.com");
@@ -50,7 +52,7 @@ public class AuthServiceImplIntTests {
     @Test
     @DisplayName("User creation fails when email already exists")
     @Order(2)
-    public void testCreateUser_ExistingEmail_ReturnsFalse() {
+    public void testCreateUser_ExistingEmail_ReturnsFalse() throws RoleNotFoundException {
         // Arrange
         SignupDTO signupDTO = new SignupDTO();
         signupDTO.setEmail("test2@test.com");

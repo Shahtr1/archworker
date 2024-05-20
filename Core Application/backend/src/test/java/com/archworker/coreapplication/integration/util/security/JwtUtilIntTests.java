@@ -39,7 +39,7 @@ public class JwtUtilIntTests {
 
         String username = "integrationTestUser";
         userDetails = new User(username, "password", Collections.emptyList());
-        validToken = jwtUtil.generateToken(username);
+        validToken = jwtUtil.generateToken(userDetails);
 
         // Set to past date
         Date expiredDate = new Date(System.currentTimeMillis() - 1000);
@@ -85,7 +85,7 @@ public class JwtUtilIntTests {
     @Test
     @DisplayName("Should Generate Consistent Token For Same User")
     void shouldGenerateConsistentTokenForSameUser() {
-        String anotherToken = jwtUtil.generateToken(userDetails.getUsername());
+        String anotherToken = jwtUtil.generateToken(userDetails);
         assertEquals(jwtUtil.extractUsername(validToken), jwtUtil.extractUsername(anotherToken));
         assertFalse(jwtUtil.isTokenExpired(anotherToken));
     }
@@ -104,7 +104,7 @@ public class JwtUtilIntTests {
         long nearExpireDuration = 1000 * 5; // 5 seconds in the future
         Date nearExpirationDate = new Date(System.currentTimeMillis() + nearExpireDuration);
         String nearExpireToken = getModifiedDateToken(
-                jwtUtil.generateToken(userDetails.getUsername()),
+                jwtUtil.generateToken(userDetails),
                 nearExpirationDate);
         assertFalse(jwtUtil.isTokenExpired(nearExpireToken));
         // Simulate waiting for the token to expire

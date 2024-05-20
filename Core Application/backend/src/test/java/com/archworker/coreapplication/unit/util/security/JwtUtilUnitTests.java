@@ -32,7 +32,8 @@ public class JwtUtilUnitTests {
     void whenGenerateToken_thenCorrectFormat() {
         // Arrange
         String username = "user";
-        String token = jwtUtil.generateToken(username);
+        UserDetails userDetails = new User(username, "password", Collections.emptyList());
+        String token = jwtUtil.generateToken(userDetails);
 
         // Act & assert
         assertEquals(username, jwtUtil.extractUsername(token));
@@ -46,7 +47,7 @@ public class JwtUtilUnitTests {
         // Arrange
         String username = "user";
         UserDetails userDetails = new User(username, "password", Collections.emptyList());
-        String token = jwtUtil.generateToken(username);
+        String token = jwtUtil.generateToken(userDetails);
 
         // Act
         Boolean isValid = jwtUtil.validateToken(token, userDetails);
@@ -61,7 +62,7 @@ public class JwtUtilUnitTests {
         // Arrange
         String username = "user";
         UserDetails userDetails = new User(username, "password", Collections.emptyList());
-        String token = jwtUtil.generateToken(username);
+        String token = jwtUtil.generateToken(userDetails);
 
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(
@@ -85,7 +86,7 @@ public class JwtUtilUnitTests {
         // Arrange
         String username = "user";
         UserDetails userDetails = new User(username, "password", Collections.emptyList());
-        String token = jwtUtil.generateToken(username);
+        String token = jwtUtil.generateToken(userDetails);
 
         // Tamper with the token to make the signature invalid
         String invalidToken = token.substring(0, token.lastIndexOf(".") + 1);

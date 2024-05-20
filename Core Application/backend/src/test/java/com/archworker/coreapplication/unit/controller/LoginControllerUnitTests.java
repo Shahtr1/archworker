@@ -74,7 +74,7 @@ public class LoginControllerUnitTests {
         when(userService.loadUserByUsername(loginDTO.getEmail()))
                 .thenReturn(mockUserDetails);
 
-        when(jwtUtil.generateToken(loginDTO.getEmail()))
+        when(jwtUtil.generateToken(mockUserDetails))
                 .thenReturn(expectedToken);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/login")

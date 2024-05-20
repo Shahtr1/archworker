@@ -1,7 +1,10 @@
 package com.archworker.coreapplication.unit.service;
 
 import com.archworker.coreapplication.dto.SignupDTO;
+import com.archworker.coreapplication.entity.Role;
 import com.archworker.coreapplication.entity.User;
+import com.archworker.coreapplication.enums.RoleEnum;
+import com.archworker.coreapplication.repository.RoleRepository;
 import com.archworker.coreapplication.repository.UserRepository;
 import com.archworker.coreapplication.service.AuthServiceImpl;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +14,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.management.relation.RoleNotFoundException;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -23,6 +30,9 @@ public class AuthServiceImplUnitTests {
     private UserRepository userRepository;
 
     @Mock
+    private RoleRepository roleRepository;
+
+    @Mock
     private PasswordEncoder passwordEncoder;
 
     @InjectMocks
@@ -30,7 +40,7 @@ public class AuthServiceImplUnitTests {
 
     @Test
     @DisplayName("User creation successful and returns TRUE")
-    void testCreateUser_whenValidUserDetailsProvided_returnsTrue() {
+    void testCreateUser_whenValidUserDetailsProvided_returnsTrue() throws RoleNotFoundException {
         // Arrange
         SignupDTO signupDTO = new SignupDTO();
         signupDTO.setEmail("test@test.com");
@@ -41,9 +51,14 @@ public class AuthServiceImplUnitTests {
         dummyUser.setEmail(signupDTO.getEmail());
         dummyUser.setPassword("hashedPassword");
 
+        Role dummyRole = new Role();
+        dummyRole.setRole(RoleEnum.USER);
+        dummyRole.setId(1L);
+
         when(userRepository.existsByEmail(signupDTO.getEmail())).thenReturn(false);
         when(passwordEncoder.encode(signupDTO.getPassword())).thenReturn("hashedPassword");
         when(userRepository.save(any(User.class))).thenReturn(dummyUser);
+        when(roleRepository.findByRole(any(RoleEnum.class))).thenReturn(Optional.of(dummyRole));
 
         // Act
         boolean result = authService.createUser(signupDTO);
@@ -58,7 +73,7 @@ public class AuthServiceImplUnitTests {
 
     @Test
     @DisplayName("User creation fails when email already exists")
-    void testCreateUser_whenEmailExists_returnsFalse() {
+    void testCreateUser_whenEmailExists_returnsFalse() throws RoleNotFoundException {
         // Arrange
         SignupDTO signupDTO = new SignupDTO();
         signupDTO.setEmail("test@test.com");

@@ -1,5 +1,6 @@
 package com.archworker.coreapplication.configuration;
 
+import com.archworker.coreapplication.enums.RoleEnum;
 import com.archworker.coreapplication.filter.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -35,7 +36,9 @@ public class WebSecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("signup","login").permitAll()
-                        .requestMatchers("api/**").authenticated()
+                        .requestMatchers("admin/**").hasRole(RoleEnum.ADMIN.name())
+                        .requestMatchers("api/**").hasRole(RoleEnum.USER.name())
+                        .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)

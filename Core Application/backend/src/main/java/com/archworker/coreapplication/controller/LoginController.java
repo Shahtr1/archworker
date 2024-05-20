@@ -79,7 +79,7 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDTO);
         }
 
-        String jwt = jwtUtil.generateToken(userDetails.getUsername());
+        String jwt = jwtUtil.generateToken(userDetails);
         return ResponseEntity.ok(new JwtDTO(jwt));
     }
 }

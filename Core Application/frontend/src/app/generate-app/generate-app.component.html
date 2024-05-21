@@ -1,0 +1,21 @@
+<form class="form" [formGroup]="generateForm" (ngSubmit)="onSubmit()">
+  <div class="form-element">
+    <label for="backend">Choose Backend Language:</label>
+    <select id="backend" formControlName="backend">
+      <option *ngFor="let option of backendOptions">{{ option }}</option>
+    </select>
+  </div>
+  <div class="form-element">
+    <label for="frontend">Choose Frontend Language:</label>
+    <select id="frontend" formControlName="frontend">
+      <option *ngFor="let option of frontendOptions">{{ option }}</option>
+    </select>
+  </div>
+  <div class="form-element">
+    <label for="model">Enter Model Name:</label>
+    <input type="text" id="model" formControlName="model" />
+  </div>
+  <button type="submit" [disabled]="generateForm.invalid">
+    Generate Application
+  </button>
+</form>

@@ -42,10 +42,10 @@ jobs:
         with:
           node-version: 21
 
-    # - name: Install dependencies
-    #   run: npm install
-    #   working-directory: ./Core Application/frontend
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./Core Application/frontend
 
-    # - name: Run frontend tests
-    #   run: npm test -- --watch=false --no-progress --browsers=ChromeHeadless
-    #   working-directory: ./Core Application/frontend
+      - name: Run frontend tests
+        run: npm test -- --watch=false --no-progress --browsers=ChromeHeadless
+        working-directory: ./Core Application/frontend

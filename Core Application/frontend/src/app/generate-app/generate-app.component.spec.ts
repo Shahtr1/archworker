@@ -29,7 +29,7 @@ describe('GenerateAppComponent', () => {
       const app = fixture.nativeElement as HTMLElement;
       const label = app.querySelector('label[for="backend"]');
       const input = app.querySelector('select[id="backend"]');
-      expect(input).toBeFalsy();
+      expect(input).toBeTruthy();
       expect(label).toBeTruthy();
       expect(label?.textContent?.trim()).toContain('Choose Backend Language:');
     });

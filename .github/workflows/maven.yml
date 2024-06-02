@@ -19,33 +19,31 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    # steps:
-    # - uses: actions/checkout@v3
+    steps:
+      
+    # Backend setup and build
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
 
-    # # Backend setup and build
-    # - name: Set up JDK 17
-    #   uses: actions/setup-java@v3
-    #   with:
-    #     java-version: '17'
-    #     distribution: 'temurin'
-    #     cache: maven
-
-    # - name: Build with Maven
-    #   run: mvn -B package --file pom.xml
-    #   working-directory: ./Core Application/backend
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+      working-directory: ./Core Application/backend
 
     # Frontend setup and build
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 21
+    - name: Checkout
+      uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 21
 
-      - name: Install dependencies
-        run: npm install
-        working-directory: ./Core Application/frontend
+    - name: Install dependencies
+      run: npm install
+      working-directory: ./Core Application/frontend
 
-      - name: Run frontend tests
-        run: npm test -- --watch=false --no-progress --browsers=ChromeHeadless
-        working-directory: ./Core Application/frontend
+    - name: Run frontend tests
+      run: npm test -- --watch=false --no-progress --browsers=ChromeHeadless
+      working-directory: ./Core Application/frontend

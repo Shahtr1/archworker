@@ -1,3 +1,11 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
 name: CI with Maven and Angular
 
 on:
@@ -24,19 +32,19 @@ jobs:
 
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-      working-directory: ./CoreApplication/backend
+      working-directory: ./Core Application/backend
 
     # Frontend setup and build
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '16'
+        node-version: '21.7.3'
         cache: 'npm'
 
     - name: Install dependencies
       run: npm install
-      working-directory: ./CoreApplication/frontend
+      working-directory: ./Core Application/frontend
 
     - name: Run frontend tests
       run: npm test -- --watch=false --no-progress --browsers=ChromeHeadless
-      working-directory: ./CoreApplication/frontend
+      working-directory: ./Core Application/frontend

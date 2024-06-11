@@ -16,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.management.relation.RoleNotFoundException;
-
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -38,6 +37,7 @@ public class AuthServiceImplUnitTests {
     @InjectMocks
     private AuthServiceImpl authService;
 
+
     @Test
     @DisplayName("User creation successful and returns TRUE")
     void testCreateUser_whenValidUserDetailsProvided_returnsTrue() throws RoleNotFoundException {
@@ -47,9 +47,7 @@ public class AuthServiceImplUnitTests {
         signupDTO.setPassword("securePassword");
         signupDTO.setName("test");
 
-        User dummyUser = new User();
-        dummyUser.setEmail(signupDTO.getEmail());
-        dummyUser.setPassword("hashedPassword");
+        User dummyUser = User.builder().email(signupDTO.getEmail()).password("hashedPassword").build();
 
         Role dummyRole = new Role();
         dummyRole.setRole(RoleEnum.USER);
@@ -68,6 +66,8 @@ public class AuthServiceImplUnitTests {
         verify(userRepository, times(1)).existsByEmail("test@test.com");
         verify(passwordEncoder, times(1)).encode("securePassword");
         verify(userRepository, times(1)).save(any(User.class));
+
+
 
     }
 

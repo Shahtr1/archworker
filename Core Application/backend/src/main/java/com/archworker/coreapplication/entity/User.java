@@ -2,8 +2,10 @@ package com.archworker.coreapplication.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,7 +15,9 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
-public class User {
+@SuperBuilder
+@NoArgsConstructor
+public class User extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

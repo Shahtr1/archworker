@@ -1,5 +1,6 @@
 package com.archworker.coreapplication.integration.util.security;
 
+import com.archworker.coreapplication.configuration.SecurityProperties;
 import com.archworker.coreapplication.util.security.JwtUtil;
 import com.archworker.coreapplication.util.security.SecurityConstants;
 import io.jsonwebtoken.Claims;
@@ -30,6 +31,9 @@ public class JwtUtilIntTests {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private SecurityProperties securityProperties;
+
     private UserDetails userDetails;
     private String validToken;
     private String expiredToken;
@@ -50,7 +54,7 @@ public class JwtUtilIntTests {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(
                         Keys.hmacShaKeyFor(
-                                Decoders.BASE64.decode(SecurityConstants.TOKEN_SECRET)))
+                                Decoders.BASE64.decode(securityProperties.getTokenSecret())))
                 .build().parseClaimsJws(token).getBody();
 
 
@@ -59,7 +63,7 @@ public class JwtUtilIntTests {
     }
 
     private Key getSignKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SecurityConstants.TOKEN_SECRET);
+        byte[] keyBytes = Decoders.BASE64.decode(securityProperties.getTokenSecret());
         return Keys.hmacShaKeyFor(keyBytes);
     }
 

@@ -3,6 +3,7 @@ package com.archworker.coreapplication.configuration;
 import com.archworker.coreapplication.enums.RoleEnum;
 import com.archworker.coreapplication.filter.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@EnableConfigurationProperties(SecurityProperties.class)
 public class WebSecurityConfiguration {
 
     private final JwtRequestFilter jwtRequestFilter;

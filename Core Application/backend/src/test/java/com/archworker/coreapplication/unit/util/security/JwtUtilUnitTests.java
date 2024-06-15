@@ -1,17 +1,21 @@
 package com.archworker.coreapplication.unit.util.security;
 
+import com.archworker.coreapplication.configuration.SecurityProperties;
+import com.archworker.coreapplication.unit.util.Constants;
 import com.archworker.coreapplication.util.security.JwtUtil;
-import com.archworker.coreapplication.util.security.SecurityConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,6 +30,14 @@ public class JwtUtilUnitTests {
 
     @InjectMocks
     private JwtUtil jwtUtil;
+
+    @Mock
+    private SecurityProperties securityProperties;
+
+    @BeforeEach
+    public void setUp() {
+        Mockito.when(securityProperties.getTokenSecret()).thenReturn(Constants.token);
+    }
 
     @Test
     @DisplayName("Generated token should contain correct username and not be expired")
@@ -67,7 +79,7 @@ public class JwtUtilUnitTests {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(
                         Keys.hmacShaKeyFor(
-                                Decoders.BASE64.decode(SecurityConstants.TOKEN_SECRET)))
+                                Decoders.BASE64.decode(securityProperties.getTokenSecret())))
                 .build().parseClaimsJws(token).getBody();
 
         // Set to past date

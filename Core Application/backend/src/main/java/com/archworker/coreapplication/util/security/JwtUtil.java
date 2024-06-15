@@ -1,5 +1,6 @@
 package com.archworker.coreapplication.util.security;
 
+import com.archworker.coreapplication.configuration.SecurityProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -19,6 +20,12 @@ import java.util.stream.Collectors;
 
 @Component
 public class JwtUtil {
+
+    private final SecurityProperties securityProperties;
+
+    public JwtUtil(SecurityProperties securityProperties) {
+        this.securityProperties = securityProperties;
+    }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -65,7 +72,7 @@ public class JwtUtil {
     }
 
     private Key getSignKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SecurityConstants.TOKEN_SECRET);
+        byte[] keyBytes = Decoders.BASE64.decode(securityProperties.getTokenSecret());
         return Keys.hmacShaKeyFor(keyBytes);
     }
 

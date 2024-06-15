@@ -11,6 +11,7 @@
 	<groupId>com.archworker</groupId>
 	<artifactId>angulargenerator</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>angulargenerator</name>
 	<description>Microservice for generating angular application</description>
 	<properties>

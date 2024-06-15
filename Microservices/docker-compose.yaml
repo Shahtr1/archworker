@@ -1,0 +1,15 @@
+services:
+  angulargenerator:
+    image: clay404/angulargenerator:v1
+    container_name: angulargenerator
+    ports:
+      - "9081:9081"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - archworker
+networks:
+  archworker:
+    driver: "bridge"

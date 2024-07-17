@@ -6,6 +6,8 @@ import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 
+import java.time.LocalDateTime;
+
 @SpringBootApplication
 public class GatewayserverApplication {
 
@@ -22,10 +24,14 @@ public class GatewayserverApplication {
 
 		for (String generator : generators) {
 			String path = "/arch/" + generator;
+			String eurekaInstanceName = generator.toUpperCase();
 			routes.route(generator,
 					p -> p.path(path + "/**")
-							.filters(f -> f.rewritePath(path + "/(?<segment>.*)", "/${segment}"))
-							.uri("lb://" + generator.toUpperCase()));
+							.filters(
+									f -> f.rewritePath(path + "/(?<segment>.*)", "/${segment}")
+											.addResponseHeader("X_Response-Time", LocalDateTime.now().toString())
+							)
+							.uri("lb://" + eurekaInstanceName));
 		}
 
 		return routes.build();

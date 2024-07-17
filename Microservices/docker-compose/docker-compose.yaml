@@ -30,6 +30,27 @@ services:
       service: microservice-eurekaserver-config
     environment:
       SPRING_APPLICATION_NAME: "angulargenerator"
+    healthcheck:
+      test: "curl --fail --silent localhost:9081/actuator/health/readiness | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  gatewayserver:
+    image: clay404/gatewayserver:v1
+    container_name: gatewayserver
+    ports:
+      - "8072:8072"
+    depends_on:
+      angulargenerator:
+        condition: service_healthy
+    extends:
+      file: common-config.yaml
+      service: microservice-eurekaserver-config
+    environment:
+      SPRING_APPLICATION_NAME: "gatewayserver"
+
 networks:
   archworker:
     driver: "bridge"

@@ -36,6 +36,13 @@ jobs:
       run: mvn -B package --file pom.xml
       working-directory: ./Core Application/backend
 
+    - name: Build and test all microservices
+      run: |
+        for dir in ./Microservices/*/ ; do
+          echo "Building and testing $dir"
+          mvn -B package --file $dir/pom.xml
+        done
+
     # Frontend setup and build
     - name: Checkout
       uses: actions/checkout@v3

@@ -39,8 +39,12 @@ jobs:
     - name: Build and test all microservices
       run: |
         for dir in ./Microservices/*/ ; do
+          if [[ "$dir" == "./Microservices/docker-compose/" ]]; then
+            echo "Skipping $dir"
+            continue
+          fi
           echo "Building and testing $dir"
-          mvn -B package --file $dir/pom.xml
+          mvn -B package --file "$dir/pom.xml"
         done
 
     # Frontend setup and build

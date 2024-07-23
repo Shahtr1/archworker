@@ -19,18 +19,21 @@ docker pull sonarqube
 ### 2. Run PostgreSQL Database Container
 
 Next, run a PostgreSQL container for SonarQube:
+
 ```sh
 docker run -d --name sonarqube-db -e POSTGRES_USER=sonar -e POSTGRES_PASSWORD=sonar -e POSTGRES_DB=sonarqube postgres:alpine
 ```
+
 This command will:
 
--   Run the PostgreSQL container in detached mode (-d).
--   Set the container name to sonarqube-db.
+- Run the PostgreSQL container in detached mode (-d).
+- Set the container name to sonarqube-db.
 - Set the PostgreSQL user to sonar (-e POSTGRES_USER=sonar).
 - Set the PostgreSQL password to sonar (-e POSTGRES_PASSWORD=sonar).
 - Set the PostgreSQL database name to sonarqube (-e POSTGRES_DB=sonarqube).
 
 ### 3. Run SonarQube Container
+
 Now, run the SonarQube container and link it to the PostgreSQL container:
 
 ```sh
@@ -52,6 +55,7 @@ This command will:
 ### Using SonarQube with Maven project and Jacoco
 
 Add these jacoco properties
+
 ```xml
 <!-- JaCoCo Properties -->
 <jacoco.version>0.8.7</jacoco.version>
@@ -62,6 +66,7 @@ Add these jacoco properties
 ```
 
 Add this dependency of jacoco maven plugin
+
 ```xml
 <dependency>
     <groupId>org.jacoco</groupId>
@@ -71,6 +76,7 @@ Add this dependency of jacoco maven plugin
 ```
 
 Add the plugin in pom
+
 ```xml
 <plugin>
     <groupId>org.jacoco</groupId>
@@ -94,14 +100,8 @@ Add the plugin in pom
 </plugin>
 ```
 
-Now run
-```sh 
-mvn clean verify sonar:sonar -Dsonar.projectKey=archworker -Dsonar.projectName='archworker' -Dsonar.host.url=http://localhost:9000 -Dsonar.token=<Your-token>
-```
+use this in your settings.xml
 
-If error persists:
-
-try to use this in your settings.xml
 ```xml
 <pluginGroups>
 	<pluginGroup>org.sonarsource.scanner.maven</pluginGroup>
@@ -124,3 +124,6 @@ try to use this in your settings.xml
     </profile>
 </profiles>
 ```
+
+Now we need to install npm package, <b>sonar-scanner</b>, it's already inside package.json
+so run `npm install` in root of project.

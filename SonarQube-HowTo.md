@@ -127,3 +127,13 @@ use this in your settings.xml
 
 Now we need to install npm package, <b>sonar-scanner</b>, it's already inside package.json
 so run `npm install` in root of project.
+
+To run all at once, run
+```sh
+sonar-scanner
+```
+
+For individual projects, run
+```sh
+mvn clean verify sonar:sonar
+```

@@ -65,6 +65,10 @@ The Angular frontend of the core application provides users with a form to input
 
 The development of ArchWorker follows a Test-Driven Development (TDD) approach, ensuring high-quality, reliable code. The project is designed to be flexible and scalable, allowing for the addition of new microservices and features as needed.
 
+## Tasks
+All tasks are regularly updated on
+https://docs.google.com/spreadsheets/d/10xZQibyyRYsbtsZLF5KcgyfrZdzFlQxIX3jD_wkR2MU/edit?usp=sharing
+
 ## Future Enhancements
 
 Planned enhancements for the ArchWorker project include:

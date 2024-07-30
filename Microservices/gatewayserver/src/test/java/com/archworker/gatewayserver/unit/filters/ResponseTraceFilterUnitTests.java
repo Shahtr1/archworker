@@ -1,4 +1,4 @@
-package com.archworker.gatewayserver.unit;
+package com.archworker.gatewayserver.unit.filters;
 
 import com.archworker.gatewayserver.filters.FilterUtility;
 import com.archworker.gatewayserver.filters.ResponseTraceFilter;

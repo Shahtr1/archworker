@@ -1,0 +1,14 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: angulargenerator
+          uri: lb://ANGULARGENERATOR
+          predicates:
+            - Path=/arch/angulargenerator/**
+          filters:
+            - RewritePath=/arch/angulargenerator/(?<segment>.*), /${segment}
+            - name: CircuitBreaker
+              args:
+                name: angulargeneratorCircuitBreaker
+                fallbackUri: forward:/contact-support

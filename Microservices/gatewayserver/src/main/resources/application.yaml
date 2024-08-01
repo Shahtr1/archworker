@@ -1,0 +1,62 @@
+spring:
+  application:
+    name: gatewayserver
+  config:
+    import: "optional:classpath:routes.yaml"
+  cloud:
+    discovery:
+      enabled: true
+    gateway:
+      discovery:
+        locator:
+          enabled: false
+          lower-case-service-id: true
+      httpclient:
+        connect-timeout: 1000
+        response-timeout: 3s
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka/
+
+server:
+  port: 8072
+
+management:
+  info:
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+    gateway:
+      enabled: true
+
+info:
+  app:
+    name: gatewayserver
+    description: Archworker gateway server
+    version: 1.0.0
+
+logging:
+  level:
+    com:
+      archworker:
+        gatewayserver: DEBUG
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-size: 10
+        permitted-number-of-calls-in-half-open-state: 3
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10000
+        minimum-number-of-calls: 5
+        automatic-transition-from-open-to-half-open-enabled: true

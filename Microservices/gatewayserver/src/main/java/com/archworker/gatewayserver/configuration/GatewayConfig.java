@@ -22,7 +22,6 @@ public class GatewayConfig {
                                         config -> config.setName(generator + "CircuitBreaker")
                                                 .setFallbackUri("forward:/contact-support")
                                 )
-
                 )
                 .uri("lb://" + eurekaInstanceName);
     }

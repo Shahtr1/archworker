@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: javagenerator
+
+server:
+  port: 9082

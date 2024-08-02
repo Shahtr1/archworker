@@ -1,0 +1,16 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  profiles:
+    active: dev
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/core_application
+    username: root
+    password: abcdABCD1234@
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+security:
+  token-secret: ${TOKEN_SECRET}

@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: angulargenerator
+
+server:
+  port: 9081
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8070/eureka/
+
+management:
+  info:
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      probes:
+        enabled: true
+  health:
+    readiness-state:
+      enabled: true``
+    liveness-state:
+      enabled: true
+
+info:
+  app:
+    name: angulargenerator
+    description: This is a sample application for generating Angular microservice
+    version: 1.0.0
+
+logging:
+  level:
+    com.archworker.angulargenerator: DEBUG

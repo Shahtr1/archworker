@@ -2,7 +2,6 @@ package com.archworker.coreapplication.integration.util.security;
 
 import com.archworker.coreapplication.configuration.SecurityProperties;
 import com.archworker.coreapplication.util.security.JwtUtil;
-import com.archworker.coreapplication.util.security.SecurityConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -16,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import java.security.Key;
@@ -25,7 +25,7 @@ import java.util.Date;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestPropertySource(locations = "/application-test.properties")
+@ActiveProfiles("test")
 public class JwtUtilIntTests {
 
     @Autowired

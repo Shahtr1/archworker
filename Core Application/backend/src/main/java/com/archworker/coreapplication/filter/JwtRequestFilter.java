@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Component
-@Profile("dev")
+@Profile({"dev", "test"})
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(HelloController.class);

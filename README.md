@@ -8,7 +8,7 @@ ArchWorker is a comprehensive code generation project designed to dynamically cr
 
 The ArchWorker project consists of several key components:
 
-1. **Core Application**: Built with Java and Angular, it collects user inputs and orchestrates the code generation process.
+1. **Core Application**: A Monolithic application built with Java and Angular, it collects user inputs and orchestrates the code generation process.
 2. **Microservices**: Responsible for generating backend and frontend code for various languages and frameworks. Each microservice handles specific parts of the generation process.
 3. **Message Queue**: Kafka is used for task management and communication between microservices.
 4. **Shared Storage**: A NAS (Network Attached Storage) system is used to store generated code zips, which are later combined and provided to the user.

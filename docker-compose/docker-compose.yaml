@@ -1,4 +1,16 @@
 services:
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD-SHELL","redis-cli ping | grep PONG"]
+      timeout: 10s
+      retries: 10
+    extends:
+      file: common-config.yaml
+      service: network-deploy-service
+
   eurekaserver:
     image: clay404/eurekaserver:v1
     container_name: eurekaserver
@@ -14,20 +26,17 @@ services:
       timeout: 5s
       retries: 20
       start_period: 10s
+    environment:
+      SPRING_APPLICATION_NAME: "eurekaserver"
     extends:
       file: common-config.yaml
       service: microservice-base-config
-    environment:
-      SPRING_APPLICATION_NAME: "eurekaserver"
 
   angulargenerator:
     image: clay404/angulargenerator:v1
     container_name: angulargenerator
     ports:
       - "9081:9081"
-    extends:
-      file: common-config.yaml
-      service: microservice-eurekaserver-config
     environment:
       SPRING_APPLICATION_NAME: "angulargenerator"
     healthcheck:
@@ -36,6 +45,9 @@ services:
       timeout: 5s
       retries: 20
       start_period: 10s
+    extends:
+      file: common-config.yaml
+      service: microservice-eurekaserver-config
 
   gatewayserver:
     image: clay404/gatewayserver:v1
@@ -43,13 +55,19 @@ services:
     ports:
       - "8072:8072"
     depends_on:
+      redis:
+        condition: service_healthy
       angulargenerator:
         condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "gatewayserver"
+      SPRING_DATA_REDIS_CONNECT-TIMEOUT: 2s
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_DATA_REDIS_TIMEOUT: 1s
     extends:
       file: common-config.yaml
       service: microservice-eurekaserver-config
-    environment:
-      SPRING_APPLICATION_NAME: "gatewayserver"
 
 networks:
   archworker:

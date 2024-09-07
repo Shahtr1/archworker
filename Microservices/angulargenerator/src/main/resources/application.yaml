@@ -30,9 +30,12 @@ management:
         enabled: true
   health:
     readiness-state:
-      enabled: true``
+      enabled: true
     liveness-state:
       enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
 
 info:
   app:

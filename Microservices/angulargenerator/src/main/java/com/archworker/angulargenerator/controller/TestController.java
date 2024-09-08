@@ -15,9 +15,10 @@ public class TestController {
     private static final Logger logger = LoggerFactory.getLogger(TestController.class);
 
     @GetMapping
-    public String hello(@RequestHeader("arch-correlation-id") String correlationId){
+    public String hello(@RequestHeader("arch-correlation-id") String correlationId) {
 
         logger.debug("arch-correlation-id: {}", correlationId);
+        logger.debug("get request for hello called...");
         return "hello world!";
     }
 }

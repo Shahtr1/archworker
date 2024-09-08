@@ -12,10 +12,16 @@ spring:
     show-sql: true
 
 logging:
+  org:
+    hibernate:
+      SQL: DEBUG
+      type:
+        descriptor:
+          sql: TRACE
   level:
-    org:
-      hibernate:
-        SQL: DEBUG
-        type:
-          descriptor:
-            sql: TRACE
+    com:
+      archworker:
+        angulargenerator: DEBUG
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
+

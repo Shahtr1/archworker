@@ -12,5 +12,3 @@ spring:
     password: abcdABCD1234@
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-security:
-  token-secret: ${TOKEN_SECRET}

@@ -15,6 +15,6 @@ public class HelloController {
 
     @GetMapping("/hello")
     public HelloDTO hello(){
-        return new HelloDTO("Hello from Authorized API request.");
+        return new HelloDTO("Hello World!");
     }
 }

@@ -19,6 +19,3 @@ logging:
         type:
           descriptor:
             sql: TRACE
-
-security:
-  token-secret: ${TOKEN_SECRET}

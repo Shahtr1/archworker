@@ -32,9 +32,9 @@ jobs:
         run: mvn -B package --file pom.xml
         working-directory: ./Portal/api
 
-      - name: Build and test all microservices
+      - name: Build and test all generators
         run: |
-          for dir in ./Microservices/*/ ; do
+          for dir in ./Generators/*/ ; do
             echo "Building and testing $dir"
             mvn -B package --file "$dir/pom.xml"
           done

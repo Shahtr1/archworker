@@ -219,7 +219,7 @@ services:
     image: mysql:8.0
     restart: always
     environment:
-      MYSQL_DATABASE: core_application
+      MYSQL_DATABASE: api
       MYSQL_ROOT_PASSWORD: abcdABCD1234@
     ports:
       - "3307:3306"
@@ -235,13 +235,13 @@ services:
       file: common-config.yaml
       service: network-deploy-service
 
-  coreapplication:
-    image: clay404/core-application:v1
+  api:
+    image: clay404/api:v1
     ports:
       - "8080:8080"
     environment:
-      SPRING_APPLICATION_NAME: "core-application"
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/core_application?allowPublicKeyRetrieval=true
+      SPRING_APPLICATION_NAME: "api"
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/api?allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: abcdABCD1234@
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver

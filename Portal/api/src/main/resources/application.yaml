@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: api
   jpa:
     hibernate:
       ddl-auto: update
@@ -11,4 +13,50 @@ spring:
     username: root
     password: abcdABCD1234@
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8070/eureka/
+
+management:
+  info:
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      probes:
+        enabled: true
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+info:
+  app:
+    name: api
+    description: This is a api for generating Angular microservice
+    version: 1.0.0
+
+logging:
+  level:
+    com:
+      archworker:
+        api: DEBUG
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
 

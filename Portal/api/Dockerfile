@@ -8,5 +8,12 @@ RUN apt-get update && apt-get install -y curl wget && apt-get clean && rm -rf /v
 # Copy the jar file to the container
 COPY target/api-0.0.1-SNAPSHOT.jar api-0.0.1-SNAPSHOT.jar
 
+# Create the directory for the OpenTelemetry Java agent
+RUN mkdir -p /app/libs
+
+# Download the OpenTelemetry Java agent JAR
+RUN curl -L -o /app/libs/opentelemetry-javaagent-1.33.6.jar \
+    https://repo1.maven.org/maven2/io/opentelemetry/javaagent/opentelemetry-javaagent/1.33.6/opentelemetry-javaagent-1.33.6.jar
+
 # Set the entry point for the container
 ENTRYPOINT ["java","-jar","api-0.0.1-SNAPSHOT.jar"]

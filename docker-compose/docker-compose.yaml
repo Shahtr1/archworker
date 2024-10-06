@@ -235,29 +235,6 @@ services:
       file: common-config.yaml
       service: network-deploy-service
 
-  api:
-    image: clay404/api:v1
-    ports:
-      - "8080:8080"
-    environment:
-      SPRING_APPLICATION_NAME: "api"
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/api?allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: abcdABCD1234@
-      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
-    healthcheck:
-      test: "curl --fail --silent http://localhost:8080/actuator/health | grep UP || exit 1"
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 40s
-    depends_on:
-      mysqldb:
-        condition: service_healthy
-    extends:
-      file: common-config.yaml
-      service: network-deploy-service
-
   # for rate limiter pattern
   redis:
     image: redis
@@ -289,9 +266,34 @@ services:
     environment:
       SPRING_APPLICATION_NAME: "eurekaserver"
       OTEL_SERVICE_NAME: "eurekaserver"
+    depends_on:
+      mysqldb:
+        condition: service_healthy
     extends:
       file: common-config.yaml
       service: microservice-base-config
+
+  api:
+    image: clay404/api:v1
+    container_name: api
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_APPLICATION_NAME: "api"
+      OTEL_SERVICE_NAME: "api"
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/api?allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: abcdABCD1234@
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+    healthcheck:
+      test: "curl --fail --silent http://localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    extends:
+      file: common-config.yaml
+      service: microservice-eurekaserver-config
 
   angulargenerator:
     image: clay404/angulargenerator:v1
@@ -318,6 +320,8 @@ services:
       - "8072:8072"
     depends_on:
       redis:
+        condition: service_healthy
+      api:
         condition: service_healthy
       angulargenerator:
         condition: service_healthy
